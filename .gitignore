@@ -84,6 +84,9 @@ jspm_packages
 # Optional npm cache directory
 .npm
 
+#Git Ignore
+.gitignore
+
 # Optional eslint cache
 .eslintcache
 
