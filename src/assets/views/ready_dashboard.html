@@ -8,7 +8,7 @@
 <!-- END Page Header -->
 
 <!-- Stats -->
-<div class="content bg-white border-b">
+<div class="hidden content bg-white border-b">
     <div class="row items-push text-uppercase">
         <div class="col-xs-6 col-sm-3">
             <div class="font-w700 text-gray-darker animated fadeIn">Product Sales</div>
@@ -37,6 +37,24 @@
 <!-- Page Content -->
 <div class="content">
     <div class="row">
+        <div class="col-lg-8">
+            <!-- Main Dashboard Chart -->
+            <div class="block">
+                <div class="block-header">
+                    <ul class="block-options">
+                        <li>
+                            <button type="button" data-js-block-option data-action="refresh_toggle" data-action-mode="demo"><i class="si si-refresh"></i></button>
+                        </li>
+                    </ul>
+                    <h3 class="block-title">Stations Map</h3>
+                </div>
+                <div class="block-content block-content-full bg-gray-lighter text-center">
+                    <!-- Leaflet.js Leaflet (is initialized in js/controllers.js -> 'DashboardCtrl' Controller), -->
+										<!-- for more examples you can check out http://angular-ui.github.io/ui-leaflet/examples/0000-viewer.html#/basic/first-example -->
+										<leaflet width="100%" height="480px"></leaflet>
+								</div>
+						</div>
+				</div>
         <div class="col-lg-8">
             <!-- Main Dashboard Chart -->
             <div class="block">

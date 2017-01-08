@@ -1,6 +1,5 @@
 /*
  *  Document   : app.js
- *  Author     : pixelcave
  *  Description: Setting up and vital functionality for our App
  *
  */
@@ -10,13 +9,15 @@ var App = angular.module('app', [
     'ngStorage',
     'ui.router',
     'ui.bootstrap',
-    'oc.lazyLoad'
+    'oc.lazyLoad',
+		'nemLogging',
+		'ui-leaflet'
 ]);
 
 // Router configuration
 App.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise('/angularjs');
+        $urlRouterProvider.otherwise('/dashboard');
         $stateProvider
             .state('angularjs', {
                 url: '/angularjs',
@@ -780,7 +781,7 @@ App.controller('AppCtrl', ['$scope', '$localStorage', '$window',
     function ($scope, $localStorage, $window) {
         // Template Settings
         $scope.oneui = {
-            version: '3.0', // Template version
+            version: '1.0', // Template version
             localStorage: false, // Enable/Disable local storage
             settings: {
                 activeColorTheme: false, // Set a color theme of your choice, available: 'amethyst', 'city, 'flat', 'modern' and 'smooth'
