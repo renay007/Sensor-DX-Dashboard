@@ -35,8 +35,18 @@ App.config(['$stateProvider', '$urlRouterProvider',
                             files: [
                                 'assets/js/plugins/slick/slick.min.css',
                                 'assets/js/plugins/slick/slick-theme.min.css',
+                                'assets/js/plugins/font-awesome/font-awesome.min.css',
+                                'assets/js/plugins/leaflet/leaflet.css',
+                                'assets/js/plugins/leaflet-awesome-markers/leaflet.awesome-markers.css',
+                                'assets/js/plugins/bootstrap-datepicker/bootstrap-datepicker3.min.css',
+                                'assets/js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css',
                                 'assets/js/plugins/slick/slick.min.js',
-                                'assets/js/plugins/chartjs/Chart.min.js'
+                                'assets/js/plugins/chartjs/Chart.min.js',
+                                'assets/js/plugins/leaflet/leaflet.js',
+                                'assets/js/plugins/leaflet-awesome-markers/leaflet.awesome-markers.min.js',
+                                'assets/js/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js',
+                                'assets/js/plugins/bootstrap-datetimepicker/moment.min.js',
+                                'assets/js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js',
                             ]
                         });
                     }]
@@ -788,7 +798,7 @@ App.controller('AppCtrl', ['$scope', '$localStorage', '$window',
                 sidebarLeft: true, // true: Left Sidebar and right Side Overlay, false: Right Sidebar and left Side Overlay
                 sidebarOpen: true, // Visible Sidebar by default (> 991px)
                 sidebarOpenXs: false, // Visible Sidebar by default (< 992px)
-                sidebarMini: false, // Mini hoverable Sidebar (> 991px)
+                sidebarMini: true, // Mini hoverable Sidebar (> 991px)
                 sideOverlayOpen: false, // Visible Side Overlay by default (> 991px)
                 sideOverlayHover: false, // Hoverable Side Overlay (> 991px)
                 sideScroll: true, // Enables custom scrolling on Sidebar and Side Overlay instead of native scrolling (> 991px)

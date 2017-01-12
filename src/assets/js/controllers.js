@@ -6,8 +6,77 @@
  */
 
 // Dashboard Content Controller
-App.controller('DashboardCtrl', ['$scope', '$localStorage', '$window',
-    function ($scope, $localStorage, $window) {
+App.controller('DashboardCtrl', ['$scope', '$localStorage', '$http', 'leafletData', '$window',
+    function ($scope, $localStorage, $http, leafletData, $window) {
+				/*
+				 * Init Lealeft.js
+				 */
+				var working = L.AwesomeMarkers.icon({ 
+						icon: 'circle',
+						markerColor: 'green',
+						prefix: 'fa'
+				});
+				var delay = L.AwesomeMarkers.icon({ 
+						icon: 'circle',
+						markerColor: 'orange',
+						prefix: 'fa'
+				});
+				var broken = L.AwesomeMarkers.icon({ 
+						icon: 'circle',
+						markerColor: 'red',
+						prefix: 'fa'
+				});
+				var icons = {
+					'Active': working,
+					'Delay': delay,
+					'Closed': broken
+				};
+
+				$scope.sensorstate = function(state) {
+					switch(state) {
+						case 'Active':
+								return '#71ae26';
+						case 'Delay':
+								return '#f0932f'; 
+						case 'Closed':
+						default:
+								return '#d43e2a'; 
+					}
+				}
+
+        $scope.centerJSON = function() {
+					leafletData.getMap().then(function(map) {
+						var latlngs = [];
+						$scope.properties = [];
+						for (var i in $scope.geojson.data.features) {
+							var points = $scope.geojson.data.features[i].geometry.coordinates;
+							$scope.properties.push($scope.geojson.data.features[i].properties);
+							latlngs.push(L.GeoJSON.coordsToLatLng(points));
+						}
+						map.fitBounds(latlngs);
+					});
+        };
+
+				//$http.get("assets/data/geojson/mesonet_station.geojson").success(function(data, status) {
+				$http.get("assets/data/geojson/africa_station.geojson").success(function(data, status) {
+						angular.extend($scope, {
+								geojson: {
+										data: data,
+										style:
+											function (feature) {return {};},
+											pointToLayer: function(feature, latlng) {
+													return new L.marker(latlng, {icon: icons[feature.properties['Station status']]});
+											},
+											onEachFeature: function (feature, layer) {
+													layer.bindPopup("Hello World!");
+											}
+								},
+								defaults: {
+										scrollWheelZoom: false
+								}
+						});
+						$scope.centerJSON();
+				});
         /*
          * Init Chart.js Chart, for more examples you can check out http://www.chartjs.org/docs
          */

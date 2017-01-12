@@ -41,7 +41,7 @@
             <!-- Main Dashboard Chart -->
             <div class="block">
                 <div class="block-header">
-                    <ul class="block-options">
+                    <ul class="hidden block-options">
                         <li>
                             <button type="button" data-js-block-option data-action="refresh_toggle" data-action-mode="demo"><i class="si si-refresh"></i></button>
                         </li>
@@ -51,20 +51,64 @@
                 <div class="block-content block-content-full bg-gray-lighter text-center">
                     <!-- Leaflet.js Leaflet (is initialized in js/controllers.js -> 'DashboardCtrl' Controller), -->
 										<!-- for more examples you can check out http://angular-ui.github.io/ui-leaflet/examples/0000-viewer.html#/basic/first-example -->
-										<leaflet width="100%" height="480px"></leaflet>
+										<leaflet width="100%" height="480px" defaults="defaults" geojson="geojson"></leaflet>
 								</div>
 						</div>
 				</div>
+        <div class="col-md-4">
+						<div style="max-height: 570px; overflow-y: scroll;" class="bg-gray-lighter">
+								<table class="stations-list table table-hover block" data-js-table-checkable>
+										<thead class="block-header">
+												<tr style="position: absolute; left: 15px; right: 15px; z-index: 999; background-color: white; border-bottom: 1px solid #ddd;">
+														<th class="text-center hidden " style="width: 50px; border: none;">
+																<label class="css-input css-checkbox css-checkbox-primary remove-margin-t remove-margin-b">
+																		<input type="checkbox" id="check-all" name="check-all"><span></span>
+																</label>
+														</th>
+														<th style="border: none;">Stations List</th>
+														<th style="border: none;"></th>
+												</tr>
+										</thead>
+										<tbody class="block-content bg-gray-lighter">
+												<tr ng-repeat="property in properties">
+														<td class="hidden text-center">
+																<label class="css-input css-checkbox css-checkbox-primary">
+																		<input type="checkbox" id="row_1" name="row_1"><span></span>
+																</label>
+														</td>
+														<td>
+																<p class="font-w600 push-10">{{property['Station ID']}}</p>
+																<p class="text-muted remove-margin-b">{{property['Site name']}}, {{property['Country']}} -- {{property['Station site type']}}</p>
+														</td>
+														<td class="middle text-center">
+																<i class="fa fa-circle" style="color: {{sensorstate(property['Station status'])}}" aria-hidden="true"></i>
+														</td>
+												</tr>
+										</tbody>
+								</table>
+						</div>
+        </div>
         <div class="col-lg-8">
             <!-- Main Dashboard Chart -->
             <div class="block">
                 <div class="block-header">
-                    <ul class="block-options">
+                    <ul class="hidden block-options">
                         <li>
                             <button type="button" data-js-block-option data-action="refresh_toggle" data-action-mode="demo"><i class="si si-refresh"></i></button>
                         </li>
                     </ul>
-                    <h3 class="block-title">Weekly Overview</h3>
+										<div class="form-group">
+												<div class="col-md-7">
+													<h3 class="block-title">Temperature</h3>
+												</div>
+												<div class="col-md-5">
+														<div data-js-datepicker class="input-daterange input-group" data-date-format="mm/dd/yyyy">
+																<input class="form-control" type="text" id="example-daterange1" name="example-daterange1" placeholder="From">
+																<span class="input-group-addon"><i class="fa fa-chevron-right"></i></span>
+																<input class="form-control" type="text" id="example-daterange2" name="example-daterange2" placeholder="To">
+														</div>
+												</div>
+										</div>
                 </div>
                 <div class="block-content block-content-full bg-gray-lighter text-center">
                     <!-- Chart.js Chart (.js-dash-chartjs-lines is initialized in js/controllers.js -> 'DashboardCtrl' Controller), for more examples you can check out http://www.chartjs.org/docs/ -->
@@ -73,27 +117,114 @@
                 <div class="block-content text-center">
                     <div class="row items-push text-center">
                         <div class="col-xs-6 col-lg-3">
-                            <div class="push-10"><i class="si si-graph fa-2x"></i></div>
-                            <div class="h5 font-w300 text-muted">+ 205 Sales</div>
+                            <div class="push-10"><img src="/assets/img/sensors/temperature.svg" height="30" width="20" alt="Temperature"></div>
+                            <div class="h5 font-w300 text-muted">Temperature</div>
                         </div>
                         <div class="col-xs-6 col-lg-3">
-                            <div class="push-10"><i class="si si-users fa-2x"></i></div>
-                            <div class="h5 font-w300 text-muted">+ 25% Clients</div>
+                            <div class="push-10"><img src="/assets/img/sensors/relative_humidity.svg" height="30" width="30" alt="Relative Humidity"></div>
+                            <div class="h5 font-w300 text-muted">Relative Humidity</div>
                         </div>
-                        <div class="col-xs-6 col-lg-3 visible-lg">
-                            <div class="push-10"><i class="si si-star fa-2x"></i></div>
-                            <div class="h5 font-w300 text-muted">+ 10 Ratings</div>
+                        <div class="col-xs-6 col-lg-3">
+                            <div class="push-10"><img src="/assets/img/sensors/pressure.svg" height="30" width="30" alt="Pressure Gauge"></div>
+                            <div class="h5 font-w300 text-muted">Pressure</div>
                         </div>
-                        <div class="col-xs-6 col-lg-3 visible-lg">
-                            <div class="push-10"><i class="si si-share fa-2x"></i></div>
-                            <div class="h5 font-w300 text-muted">+ 35 Followers</div>
+                        <div class="col-xs-6 col-lg-3">
+                            <div class="push-10"><img src="/assets/img/sensors/precipitation.svg" height="30" width="30" alt="Precipitation"></div>
+                            <div class="h5 font-w300 text-muted">Precipitation</div>
+                        </div>
+                        <div class="col-xs-6 col-lg-3 hidden">
+                            <div class="push-10"><img src="/assets/img/sensors/radiation.svg" height="30" width="30" alt="Radiation"></div>
+                            <div class="h5 font-w300 text-muted">Radiation</div>
+                        </div>
+                        <div class="col-xs-6 col-lg-3 hidden">
+                            <div class="push-10"><img src="/assets/img/sensors/wind.svg" height="30" width="30" alt="Wind"></div>
+                            <div class="h5 font-w300 text-muted">Wind</div>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- END Main Dashboard Chart -->
         </div>
-        <div class="col-lg-4">
+        <div class="col-md-4">
+            <div class="block">
+                <div class="block-header">
+                    <h3 class="block-title">Sensor Types</h3>
+                </div>
+                <div class="block-content block-content-full bg-gray-lighter text-center">
+										<table class="sensor-types table">
+												<tbody>
+														<tr class="text-left">
+																<td class="middle">
+                            				<div><img src="/assets/img/sensors/temperature.svg" height="30" width="20" alt="Temperature"></div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">Temperature</div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">---</div>
+																</td>
+														</tr>
+														<tr class="text-left">
+																<td class="middle">
+																		<div><img src="/assets/img/sensors/relative_humidity.svg" height="30" width="30" alt="Relative Humidity"></div>
+																</td>
+																<td class="middle">
+																		<div class="h5 font-w300 text-muted">Relative Humidity</div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">---</div>
+																</td>
+														</tr>
+														<tr class="text-left">
+																<td class="middle">
+                            				<div><img src="/assets/img/sensors/pressure.svg" height="30" width="30" alt="Pressure Gauge"></div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">Pressure</div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">---</div>
+																</td>
+														</tr>
+														<tr class="text-left">
+																<td class="middle">
+                            				<div><img src="/assets/img/sensors/precipitation.svg" height="30" width="30" alt="Precipitation"></div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">Precipitation</div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">---</div>
+																</td>
+														</tr>
+														<tr class="text-left">
+																<td class="middle">
+                            				<div><img src="/assets/img/sensors/radiation.svg" height="30" width="30" alt="Radiation"></div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">Radiation</div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">---</div>
+																</td>
+														</tr>
+														<tr class="text-left">
+																<td class="middle">
+                            				<div><img src="/assets/img/sensors/wind.svg" height="30" width="30" alt="Wind"></div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">Wind</div>
+																</td>
+																<td class="middle">
+                            				<div class="h5 font-w300 text-muted">---</div>
+																</td>
+														</tr>
+												</tbody>
+										</table>
+								</div>
+						</div>
+        </div>
+        <div class="hidden col-lg-4">
             <!-- Latest Sales Widget -->
             <div class="block">
                 <div class="block-header">
@@ -246,7 +377,7 @@
             <!-- END Latest Sales Widget -->
         </div>
     </div>
-    <div class="row">
+    <div class="row hidden">
         <div class="col-lg-8">
             <!-- News -->
             <div class="block">
