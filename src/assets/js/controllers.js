@@ -6,8 +6,8 @@
  */
 
 // Dashboard Content Controller
-App.controller('DashboardCtrl', ['$scope', '$localStorage', '$http', 'leafletData', '$window',
-    function ($scope, $localStorage, $http, leafletData, $window) {
+App.controller('DashboardCtrl', ['$scope', '$localStorage', '$http', '$window',
+    function ($scope, $localStorage, $http, $window, $uibModal) {
 				/*
 				 * Init Lealeft.js
 				 */
@@ -43,7 +43,7 @@ App.controller('DashboardCtrl', ['$scope', '$localStorage', '$http', 'leafletDat
 								return '#d43e2a'; 
 					}
 				}
-
+				/*
         $scope.centerJSON = function() {
 					leafletData.getMap().then(function(map) {
 						var latlngs = [];
@@ -56,8 +56,8 @@ App.controller('DashboardCtrl', ['$scope', '$localStorage', '$http', 'leafletDat
 						map.fitBounds(latlngs);
 					});
         };
+				*/
 
-				//$http.get("assets/data/geojson/mesonet_station.geojson").success(function(data, status) {
 				$http.get("assets/data/geojson/africa_station.geojson").success(function(data, status) {
 						angular.extend($scope, {
 								geojson: {
@@ -75,57 +75,266 @@ App.controller('DashboardCtrl', ['$scope', '$localStorage', '$http', 'leafletDat
 										scrollWheelZoom: false
 								}
 						});
-						$scope.centerJSON();
+						$scope.properties = [];
+						for (var i in $scope.geojson.data.features) {
+							var points = $scope.geojson.data.features[i].geometry.coordinates;
+							$scope.properties.push($scope.geojson.data.features[i].properties);
+						}
 				});
-        /*
-         * Init Chart.js Chart, for more examples you can check out http://www.chartjs.org/docs
-         */
-
-        // Get Chart Container
-        var dashChartLinesCon  = jQuery('.js-dash-chartjs-lines')[0].getContext('2d');
-
-        // Set Chart and Chart Data variables
-        var dashChartLines, dashChartLinesData;
-
-        // Lines Chart Data
-        var dashChartLinesData = {
-            labels: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
-            datasets: [
-                {
-                    label: 'This Week',
-                    fillColor: 'rgba(44, 52, 63, .07)',
-                    strokeColor: 'rgba(44, 52, 63, .25)',
-                    pointColor: 'rgba(44, 52, 63, .25)',
-                    pointStrokeColor: '#fff',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(44, 52, 63, 1)',
-                    data: [34, 42, 40, 65, 48, 56, 80]
-                },
-                {
-                    label: 'Last Week',
-                    fillColor: 'rgba(44, 52, 63, .1)',
-                    strokeColor: 'rgba(44, 52, 63, .55)',
-                    pointColor: 'rgba(44, 52, 63, .55)',
-                    pointStrokeColor: '#fff',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(44, 52, 63, 1)',
-                    data: [18, 19, 20, 35, 23, 28, 50]
-                }
-            ]
-        };
-
-        // Init Lines Chart
-        dashChartLines = new Chart(dashChartLinesCon).Line(dashChartLinesData, {
-            scaleFontFamily: "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-            scaleFontColor: '#999',
-            scaleFontStyle: '600',
-            tooltipTitleFontFamily: "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-            tooltipCornerRadius: 3,
-            maintainAspectRatio: false,
-            responsive: true
-        });
+			
     }
 ]);
+
+App.controller('leaflet', ['$scope', '$uibModal', '$http', function ($scope, $uibModal, $http) {
+				var working = L.AwesomeMarkers.icon({ 
+						icon: 'circle',
+						markerColor: 'green',
+						prefix: 'fa'
+				});
+				var delay = L.AwesomeMarkers.icon({ 
+						icon: 'circle',
+						markerColor: 'orange',
+						prefix: 'fa'
+				});
+				var broken = L.AwesomeMarkers.icon({ 
+						icon: 'circle',
+						markerColor: 'red',
+						prefix: 'fa'
+				});
+				var icons = {
+					'Active': working,
+					'Delay': delay,
+					'Closed': broken
+				};
+
+				$scope.sensorstate = function(state) {
+					switch(state) {
+						case 'Active':
+								return '#71ae26';
+						case 'Delay':
+								return '#f0932f'; 
+						case 'Closed':
+						default:
+								return '#d43e2a'; 
+					}
+				}
+    $scope.openModal = function (event) {
+      $uibModal.open({
+        'template': '<div highchart></div>',
+        'controller': 'highchart',
+        'resolve': {
+          'data': function () {
+            return { 
+              series: [{
+                name: "Hestavollane",
+                data: [0.2, 0.8, 0.8, 0.8, 1, 1.3, 1.5, 2.9, 1.9, 2.6, 1.6, 3, 4, 3.6, 4.5, 4.2, 4.5, 4.5, 4, 3.1, 2.7, 4, 2.7, 2.3, 2.3, 4.1, 7.7, 7.1, 5.6, 6.1, 5.8, 8.6, 7.2, 9, 10.9, 11.5, 11.6, 11.1, 12, 12.3, 10.7, 9.4, 9.8, 9.6, 9.8, 9.5, 8.5, 7.4, 7.6]
+              }, {
+                name: "Vik",
+                data: [0, 0, 0.6, 0.9, 0.8, 0.2, 0, 0, 0, 0.1, 0.6, 0.7, 0.8, 0.6, 0.2, 0, 0.1, 0.3, 0.3, 0, 0.1, 0, 0, 0, 0.2, 0.1, 0, 0.3, 0, 0.1, 0.2, 0.1, 0.3, 0.3, 0, 3.1, 3.1, 2.5, 1.5, 1.9, 2.1, 1, 2.3, 1.9, 1.2, 0.7, 1.3, 0.4, 0.3]
+              }]
+            }
+          }
+        }
+      })
+    }
+    $scope.$on('leaflet', function (event, leaflet) {
+			$http.get("assets/data/geojson/africa_station.geojson").success(function(data, status) {
+					angular.extend($scope, {
+							geojson: {
+									data: data,
+									style:
+										function (feature) {return {};},
+										pointToLayer: function(feature, latlng) {
+												return new L.marker(latlng, {icon: icons[feature.properties['Station status']]}).addTo(leaflet);
+										},
+										onEachFeature: function (feature, layer) {
+												layer.bindPopup("Hello World!");
+												layer.on('click', $scope.openModal).addTo(leaflet);
+										}
+							},
+							defaults: {
+									scrollWheelZoom: false
+							}
+					});
+					$scope.properties = [];
+					var gg = $scope.geojson.data;
+					mylayer = L.geoJSON(gg, { 
+						pointToLayer: function(feature, latlng) {
+								return new L.marker(latlng, {icon: icons[feature.properties['Station status']]});
+						},
+						onEachFeature: function (feature, layer) {
+								layer.on('click', $scope.openModal).addTo(leaflet);
+						}
+					}).addTo(leaflet);
+					//leaflet.setView([34.798,-96.66], 6)
+					mylayer.on('click', $scope.openModal)
+					for (var i in $scope.geojson.data.features) {
+						var points = $scope.geojson.data.features[i].geometry.coordinates;
+						$scope.properties.push($scope.geojson.data.features[i].properties);
+					}
+			});
+    })
+  }
+])
+
+App.controller('highchart', [
+           '$scope', '$uibModalInstance', 'data',
+  function ($scope,   $uibModalInstance,   data) {
+    $scope.$uibModalInstance = $uibModalInstance
+    $scope.data = data
+  }
+])
+
+App.directive('leaflet', [
+  function () {
+    return {
+      link: function (scope, element, attributes) {
+        scope.$broadcast('leaflet', new L.Map(element[0], {
+          'center': [0, 0],
+          'zoom': 0,
+          'layers': [
+            new L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+            })
+          ]
+        }))
+      }
+    }
+  }
+])
+
+App.directive('highchart', [
+           'chart',
+  function (chart) {
+    return {
+      'link': function (scope, element, attributes) {
+        var data = angular.extend(scope.data, chart)
+        $(element[0]).highcharts(data)
+      }
+    }
+  }
+])
+
+App.value('chart', {
+  chart: {
+      type: "spline"
+  },
+  title: {
+      text: "Wind speed during two days"
+  },
+  subtitle: {
+      text: "May 31 and and June 1, 2015 at two locations in Vik i Sogn, Norway"
+  },
+  xAxis: {
+      type: "datetime",
+      labels: {
+          overflow: "justify"
+      }
+  },
+  yAxis: {
+      title: {
+          text: "Wind speed (m/s)"
+      },
+      minorGridLineWidth: 0,
+      gridLineWidth: 0,
+      alternateGridColor: null,
+      plotBands: [{
+          from: 0.3,
+          to: 1.5,
+          color: "rgba(68, 170, 213, 0.1)",
+          label: {
+              text: "Light air",
+              style: {
+                  color: "#606060"
+              }
+          }
+      }, {
+          from: 1.5,
+          to: 3.3,
+          color: "rgba(0, 0, 0, 0)",
+          label: {
+              text: "Light breeze",
+              style: {
+                  color: "#606060"
+              }
+          }
+      }, {
+          from: 3.3,
+          to: 5.5,
+          color: "rgba(68, 170, 213, 0.1)",
+          label: {
+              text: "Gentle breeze",
+              style: {
+                  color: "#606060"
+              }
+          }
+      }, {
+          from: 5.5,
+          to: 8,
+          color: "rgba(0, 0, 0, 0)",
+          label: {
+              text: "Moderate breeze",
+              style: {
+                  color: "#606060"
+              }
+          }
+      }, {
+          from: 8,
+          to: 11,
+          color: "rgba(68, 170, 213, 0.1)",
+          label: {
+              text: "Fresh breeze",
+              style: {
+                  color: "#606060"
+              }
+          }
+      }, {
+          from: 11,
+          to: 14,
+          color: "rgba(0, 0, 0, 0)",
+          label: {
+              text: "Strong breeze",
+              style: {
+                  color: "#606060"
+              }
+          }
+      }, {
+          from: 14,
+          to: 15,
+          color: "rgba(68, 170, 213, 0.1)",
+          label: {
+              text: "High wind",
+              style: {
+                  color: "#606060"
+              }
+          }
+      }]
+  },
+  tooltip: {
+      valueSuffix: " m/s"
+  },
+  plotOptions: {
+      spline: {
+          lineWidth: 4,
+          states: {
+              hover: {
+                  lineWidth: 5
+              }
+          },
+          marker: {
+              enabled: false
+          },
+          pointInterval: 3600000, 
+          pointStart: Date.UTC(2015, 4, 31, 0, 0, 0)
+      }
+  },
+  navigation: {
+      menuItemStyle: {
+          fontSize: "10px"
+      }
+  }
+})
+
 
 // UI Elements Activity Controller
 App.controller('UiActivityCtrl', ['$scope', '$localStorage', '$window',

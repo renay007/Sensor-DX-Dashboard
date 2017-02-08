@@ -1,3 +1,8 @@
+<style>
+.leaflet-container {                                                                                                                                 
+	  height: 480px;
+}
+</style>
 <!-- Page Header -->
 <div class="content bg-image overflow-hidden" style="background-image: url('assets/img/photos/photo3@2x.jpg');">
     <div class="push-50-t push-15">
@@ -51,7 +56,8 @@
                 <div class="block-content block-content-full bg-gray-lighter text-center">
                     <!-- Leaflet.js Leaflet (is initialized in js/controllers.js -> 'DashboardCtrl' Controller), -->
 										<!-- for more examples you can check out http://angular-ui.github.io/ui-leaflet/examples/0000-viewer.html#/basic/first-example -->
-										<leaflet width="100%" height="480px" defaults="defaults" geojson="geojson"></leaflet>
+										<div ng-app="app" ng-controller="leaflet" leaflet></div>
+										<!-- <leaflet width="100%" height="480px" defaults="defaults" geojson="geojson"></leaflet>-->
 								</div>
 						</div>
 				</div>
@@ -112,9 +118,12 @@
                 </div>
                 <div class="block-content block-content-full bg-gray-lighter text-center">
                     <!-- Chart.js Chart (.js-dash-chartjs-lines is initialized in js/controllers.js -> 'DashboardCtrl' Controller), for more examples you can check out http://www.chartjs.org/docs/ -->
-                    <div style="height: 374px;"><canvas class="js-dash-chartjs-lines"></canvas></div>
+                    <!-- <div style="height: 374px;"> -->
+										<div class="col-xs-12">
+												<!-- <highchart id="chart1" config="chartConfig"></highchart> -->
+										</div>
                 </div>
-                <div class="block-content text-center">
+                <div class="block-content text-center hidden">
                     <div class="row items-push text-center">
                         <div class="col-xs-6 col-lg-3">
                             <div class="push-10"><img src="/assets/img/sensors/temperature.svg" height="30" width="20" alt="Temperature"></div>
